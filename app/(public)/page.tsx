@@ -18,7 +18,15 @@ const Home = () => {
       {/* ══════════════════════════════════════════
           HERO SECTION
       ══════════════════════════════════════════ */}
-      <section className="flex flex-col lg:grid lg:grid-cols-2 gap-10 w-full max-w-6xl items-center px-5 pt-16 pb-12 lg:px-10 animate-fade-up">
+      <section className="relative overflow-hidden flex flex-col lg:grid lg:grid-cols-2 gap-10 w-full max-w-6xl items-center px-5 pt-16 pb-12 lg:px-10 animate-fade-up">
+
+        {/* Water rings */}
+        <div className="hero-rings">
+          <div className="ring ring-1" />
+          <div className="ring ring-2" />
+          <div className="ring ring-3" />
+          <div className="ring ring-4" />
+        </div>
 
         {/* LEFT */}
         <div className="flex w-full flex-col items-center lg:items-start text-center lg:text-left">
