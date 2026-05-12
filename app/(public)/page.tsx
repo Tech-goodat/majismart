@@ -60,7 +60,7 @@ const Home = () => {
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap gap-3 mt-8 justify-center lg:justify-start animate-fade-up" style={{ animationDelay: '0.4s' }}>
+          <div className="flex w-full gap-3 mt-8 justify-center lg:justify-start animate-fade-up" style={{ animationDelay: '0.4s' }}>
             <Link href="/download" className="btn-primary w-full text-lg lg:w-50 py-2">Get the App</Link>
             <Link href="/auth/login" className="btn-secondary w-full lg:w-30 text-lg py-2">Sign In</Link>
           </div>
@@ -217,7 +217,7 @@ const Home = () => {
           Download MajiSmart free. No subscription, no hidden charges — just smarter water management.
         </p>
 
-        <div className="flex flex-col w-full lg:flex-row gap-4 justify-center mt-10">
+        <div className="flex w-full lg:flex-row gap-1  lg:gap-4 justify-center mt-10">
           <Link href="/download" className="w-full lg:w-70 store-btn">
             <Image src="/applestore.png" alt="Apple" width={28} height={28} className="w-7 h-auto" />
             <div className="flex flex-col items-start">
