@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { GiRoundStar } from "react-icons/gi";
 
 const Home = () => {
   return (
@@ -134,6 +135,73 @@ const Home = () => {
           <p className='text-lg text-gray-400'>Every meter reading - timestamped, delta-tracked, and color-coded by consumption level. Scroll back months in a clean timeline view.</p>
         </div>
       </div>
+      <div className='flex mt-10 p-4 flex-col w-full lg:grid lg:grid-cols-2 gap-4 items-center justify-center'>
+        <section className='flex flex-col w-full items-center'>
+          <h1 className='bg-linear-to-r flex w-full text-xl font-semibold mb-2 from-[#00C8F0] to-[#00E0BB] bg-clip-text text-transparent '>How it works</h1>
+           <h1 className='text-6xl font-bold flex w-full'>Set up in</h1>
+           <h1 className='text-6xl bg-linear-to-r from-[#00C8F0] to-[#00E0BB] bg-clip-text text-transparent font-bold flex w-full'>under 2</h1>
+           <h1 className='text-6xl font-bold flex w-full'>minutes</h1>
+           <p className='text-lg flex w-full mt-3 text-gray-400'>Link your water account number and you're done. MajiSmart</p>
+           <p className='text-lg flex w-full text-gray-400'>handles the rest automatically.</p>
+
+           <section className='flex mt-10 gap-6  w-full items-center'>
+            <h1 className='text-2xl font-bold border rounded-full flex items-center justify-center p-3 text-gray-400'>01</h1>
+            <div className='flex flex-col items-center w-full '>
+               <p className='text-2xl flex w-full font-semibold  text-white'>Download & register</p>
+               <p className='text-lg flex w-full text-gray-400'>Create an account with your phone number in seconds. No paperwork, no office visit.</p>
+            </div>
+           </section>
+
+            <section className='flex mt-10 gap-6  w-full items-center'>
+            <h1 className='text-2xl font-bold border rounded-full flex items-center justify-center p-3 text-gray-400'>01</h1>
+            <div className='flex flex-col items-center w-full '>
+               <p className='text-2xl flex w-full font-semibold  text-white'>Link your meter account</p>
+               <p className='text-lg flex w-full text-gray-400'>Enter your water utility account number. Add multiple properties if you need to.</p>
+            </div>
+           </section>
+
+            <section className='flex mt-10 gap-6  w-full items-center'>
+            <h1 className='text-2xl font-bold border rounded-full flex items-center justify-center p-3 text-gray-400'>01</h1>
+            <div className='flex flex-col items-center w-full '>
+               <p className='text-2xl flex w-full font-semibold  text-white'>Monitor & pay with ease</p>
+               <p className='text-lg flex w-full text-gray-400'>Get notified of low balance, review readings, and pay directly from your phone anytime, anywhere.</p>
+            </div>
+           </section>
+        </section>
+       <section className='flex w-full items-center justify-center'>
+        <Image src="/rename.png"
+          alt="App preview"
+          width={200}
+          height={200}
+          className="w-full lg:w-70 h-auto"/>
+       </section>
+      </div>
+      <section className='flex p-2 mt-10 flex-col lg:grid lg:grid-cols-2 gap-4 w-full items-center justify-center'>
+        <div className='flex flex-col w-full items-center justify-left'>
+          <h1 className='bg-linear-to-r mb-2 flex w-full items-center from-[#00C8F0] to-[#00E0BB] bg-clip-text text-transparent '>TESTIMONIALS</h1>
+          <h1 className='text-6xl font-bold flex w-full'>Pay your</h1>
+          <h1 className='text-6xl bg-linear-to-r from-[#00C8F0] to-[#00E0BB] bg-clip-text text-transparent font-bold flex w-full'>water bill</h1>
+          <h1 className='text-6xl font-bold flex w-full'>in 3 taps</h1>
+
+           <p className='text-lg flex w-full mt-5 text-gray-400'>Native M-Pesa integration means zero friction. Select an amount,</p>
+           <p className='text-lg flex w-full text-gray-400'>confirm, done. Receipts are stored automatically.</p>
+
+
+           <p className='text-lg flex w-full text-[#00C8F0] items-center gap-3 mt-10'><GiRoundStar /> <span className='text-gray-400'>M-Pesa STK push — no copy-pasting paybill numbers</span></p>
+           <p className='text-lg flex w-full text-[#00C8F0] items-center gap-3 mt-5'><GiRoundStar /> <span className='text-gray-400'>Preset amounts (KES 200, 500, 1000) for faster top-ups</span></p>
+           <p className='text-lg flex w-full text-[#00C8F0] items-center gap-3 mt-5'><GiRoundStar /> <span className='text-gray-400'>Instant balance update after every transaction</span></p>
+           <p className='text-lg flex w-full text-[#00C8F0] items-center gap-3 mt-5'><GiRoundStar /> <span className='text-gray-400'>Full transaction history with downloadable receipts</span></p>
+
+
+        </div>
+        <div className='flex w-full items-center justify-center'>
+          <Image src="/rename.png"
+          alt="App preview"
+          width={300}
+          height={300}
+          className="w-full lg:w-70 h-auto"/>
+        </div>
+      </section>
     </div>
   );
 };
