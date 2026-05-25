@@ -4,6 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { HiHome } from "react-icons/hi";
 
 import { FaUnlockAlt, FaEyeSlash, FaRegEye } from "react-icons/fa";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
@@ -59,10 +60,8 @@ const LogIn = () => {
 
       console.log(data)
 
-      // Store token
       sessionStorage.setItem('token', data.access_token)
 
-      // Optional delay for animation feel
       setTimeout(() => {
         setIsLoading(false)
         router.push('/dashboard')
@@ -75,10 +74,19 @@ const LogIn = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#050A0F] text-white">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-[#050A0F] text-white">
+      <div className='flex  w-full items-center justify-start px-5 lg:hidden'>
+        <Link href="/" className="flex bg-gradient-to-r from-[#00C8F0] to-[#00E0BB] bg-clip-text p-4 gap-3 items-center text-gray-400 hover:text-white transition">
+          <HiHome size={25} />
+           <span
+            className="text-2xl flex items-center font-bold  text-transparent"
+          >
+            MajiSmart
+          </span>
+        </Link>
+      </div>
       <div className="w-full max-w-6xl grid md:grid-cols-2 gap-10 items-center">
 
-        {/* LEFT IMAGE */}
         <div className="flex justify-center items-center animate-fade-up">
           <Image
             src="/smartimage.png"
@@ -90,18 +98,9 @@ const LogIn = () => {
           />
         </div>
 
-        {/* RIGHT SIDE */}
         <section className="w-full flex flex-col items-start text-left">
 
-          {/* LOGO */}
-          <Link
-            href="/"
-            className="text-3xl mt-4 font-bold bg-gradient-to-r from-[#00C8F0] to-[#00E0BB] bg-clip-text text-transparent"
-          >
-            MajiSmart
-          </Link>
 
-          {/* BADGE */}
           <div className="mt-6 inline-flex items-center gap-3 px-4 py-2 rounded-full border border-teal-400/20 bg-teal-400/5 text-teal-300 text-sm">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute h-full w-full rounded-full bg-cyan-400 opacity-60" />
@@ -110,8 +109,6 @@ const LogIn = () => {
 
             Secure login takes just a moment
           </div>
-
-          {/* HEADING */}
           <h1 className="mt-6 text-4xl font-semibold tracking-tight">
             Welcome back !
           </h1>
@@ -120,13 +117,11 @@ const LogIn = () => {
             Sign in to manage your water account, monitor usage, and stay updated in real time.
           </p>
 
-          {/* FORM */}
           <form
             onSubmit={handleLogin}
             className="w-full max-w-md mt-8 space-y-5"
           >
 
-            {/* EMAIL */}
             <div className="space-y-3">
               <label className="text-sm  text-gray-300">
                 Email Address
@@ -153,7 +148,6 @@ const LogIn = () => {
               </div>
             </div>
 
-            {/* PASSWORD */}
             <div className="space-y-2">
               <label className="text-sm text-gray-300">
                 Password
@@ -192,7 +186,6 @@ const LogIn = () => {
               </div>
             </div>
 
-            {/* BUTTON */}
             <button
               type="submit"
               disabled={isLoading}
