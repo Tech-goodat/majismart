@@ -60,7 +60,7 @@ const LogIn = () => {
       console.log(data)
 
       // Store token
-      sessionStorage.setItem('token', data.token)
+      sessionStorage.setItem('token', data.access_token)
 
       // Optional delay for animation feel
       setTimeout(() => {
@@ -71,7 +71,6 @@ const LogIn = () => {
     } catch (err: any) {
       console.error('Login error:', err)
       alert(err.message || 'Something went wrong')
-      setIsLoading(false)
     }
   }
 

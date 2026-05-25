@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
 import { IoIosNotifications } from "react-icons/io";
-import { RiSecurePaymentFill } from "react-icons/ri";
 import { SiContactlesspayment } from "react-icons/si";
 
 const Dashboard = () => {

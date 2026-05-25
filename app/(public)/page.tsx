@@ -81,11 +81,11 @@ const Home = () => {
             className="flex w-full gap-3 mt-8 justify-center lg:justify-start animate-fade-up"
             style={{ animationDelay: '0.4s' }}
           >
-            <Link href="/download" className="btn-primary w-full text-lg lg:w-50 py-2">
+            <Link href="/download" className="btn-primary w-[60%] text-lg lg:w-50 py-2">
               Get the App
             </Link>
 
-            <Link href="/auth/login" className="btn-secondary w-full lg:w-30 text-lg py-2">
+            <Link href="/auth/login" className="btn-secondary w-[40%] lg:w-30 text-lg py-2">
               Sign In
             </Link>
           </div>
@@ -138,7 +138,7 @@ const Home = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-          <div className="feature-card animate-fade-up" style={{ animationDelay: '0.15s' }}>
+          <div className="feature-card p-4  animate-fade-up" style={{ animationDelay: '0.15s' }}>
             <div className="feature-icon-wrap">
               <Image
                 src="/balance.png"
@@ -158,7 +158,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="feature-card animate-fade-up" style={{ animationDelay: '0.25s' }}>
+          <div className="feature-card p-4 animate-fade-up" style={{ animationDelay: '0.25s' }}>
             <div className="feature-icon-wrap">
               <Image
                 src="/payment.png"
@@ -179,7 +179,7 @@ const Home = () => {
           </div>
 
           <div
-            className="feature-card animate-fade-up sm:col-span-2 lg:col-span-1"
+            className="feature-card p-4 animate-fade-up sm:col-span-2 lg:col-span-1"
             style={{ animationDelay: '0.35s' }}
           >
             <div className="feature-icon-wrap">
@@ -251,7 +251,7 @@ const Home = () => {
                   desc: 'Get notified of low balance, review readings, and pay directly from your phone — anytime, anywhere.'
                 },
               ].map((step) => (
-                <div key={step.num} className="step-card animate-fade-up">
+                <div key={step.num} className="step-card p-4 animate-fade-up">
                   <span className="step-number">{step.num}</span>
 
                   <div>
@@ -398,9 +398,9 @@ const Home = () => {
           Download MajiSmart free. No subscription, no hidden charges — just smarter water management.
         </p>
 
-        <div className="flex w-full lg:flex-row gap-1 lg:gap-4 justify-center mt-10">
+        <div className="flex flex-col  w-full lg:flex-row gap-3 lg:gap-4 justify-center mt-10">
 
-          <Link href="/download" className="w-full lg:w-70 store-btn">
+          <Link href="/download" className="w-full btn-secondary lg:w-60 gap-4">
             <Image
               src="/applestore.png"
               alt="Apple"
@@ -420,7 +420,7 @@ const Home = () => {
             </div>
           </Link>
 
-          <Link href="/download" className="store-btn lg:w-70 w-full">
+          <Link href="/download" className="btn-secondary gap-4 lg:w-60 w-full">
             <Image
               src="/playstore.png"
               alt="Google Play"
