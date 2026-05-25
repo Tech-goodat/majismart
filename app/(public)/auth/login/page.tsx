@@ -127,8 +127,8 @@ const LogIn = () => {
           >
 
             {/* EMAIL */}
-            <div className="space-y-2">
-              <label className="text-sm text-gray-300">
+            <div className="space-y-3">
+              <label className="text-sm  text-gray-300">
                 Email Address
               </label>
 

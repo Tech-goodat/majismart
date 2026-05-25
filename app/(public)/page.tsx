@@ -7,7 +7,6 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col items-center text-white overflow-x-hidden">
 
-      {/* ── BACKGROUND ORBS ── */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
         <div className="orb orb-1" />
         <div className="orb orb-2" />
@@ -15,9 +14,7 @@ const Home = () => {
         <div className="grid-overlay" />
       </div>
 
-      {/* ══════════════════════════════════════════
-          HERO SECTION
-      ══════════════════════════════════════════ */}
+      {/*HERO SECTION*/}
       <section className="relative overflow-hidden flex flex-col lg:grid lg:grid-cols-2 gap-10 w-full max-w-6xl items-center px-5 pt-16 pb-12 lg:px-10 animate-fade-up">
 
         {/* Water rings */}
@@ -31,12 +28,9 @@ const Home = () => {
         {/* LEFT */}
         <div className="flex w-full flex-col items-center lg:items-start text-center lg:text-left">
 
-          {/* Mobile logo */}
           <Link href="/" className="text-2xl flex md:hidden mb-8 font-bold gradient-text">
             MajiSmart
           </Link>
-
-          {/* Badge */}
           <div
             className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-teal-500/30 bg-teal-500/8 text-teal-400 text-sm mb-8 animate-fade-up"
             style={{ animationDelay: '0.1s' }}
@@ -48,7 +42,6 @@ const Home = () => {
             It has never been this Good !
           </div>
 
-          {/* Headline */}
           <div className="flex flex-col w-full animate-fade-up" style={{ animationDelay: '0.2s' }}>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
               Smart Water
@@ -67,7 +60,6 @@ const Home = () => {
             </h1>
           </div>
 
-          {/* Description */}
           <p
             className="mt-6 text-base sm:text-lg text-gray-400 max-w-md mx-auto lg:mx-0 leading-relaxed animate-fade-up"
             style={{ animationDelay: '0.3s' }}
@@ -76,7 +68,6 @@ const Home = () => {
             in seconds — all from one beautifully designed app.
           </p>
 
-          {/* CTAs */}
           <div
             className="flex w-full gap-3 mt-8 justify-center lg:justify-start animate-fade-up"
             style={{ animationDelay: '0.4s' }}
@@ -92,7 +83,6 @@ const Home = () => {
 
         </div>
 
-        {/* RIGHT — image */}
         <div
           className="flex justify-center lg:justify-end w-full animate-fade-up"
           style={{ animationDelay: '0.25s' }}
@@ -111,9 +101,7 @@ const Home = () => {
 
       </section>
 
-      {/* ══════════════════════════════════════════
-          FEATURES SECTION
-      ══════════════════════════════════════════ */}
+      {/*FEATURES SECTION*/}
       <section
         id="features"
         className="scroll-mt-28 w-full max-w-6xl px-5 lg:px-10 py-16 animate-fade-up"
@@ -204,16 +192,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          HOW IT WORKS SECTION
-      ══════════════════════════════════════════ */}
+      {/*HOW IT WORKS SECTION*/}
       <section
         id="how"
         className="scroll-mt-28 w-full flex max-w-6xl px-5 lg:px-10 py-16"
       >
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center">
 
-          {/* Left text */}
           <div className="flex flex-col w-full animate-fade-up">
             <span className="label-tag mb-4">HOW IT WORKS</span>
 
@@ -268,7 +253,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Right image */}
           <div
           className="flex justify-center lg:justify-end w-full animate-fade-up"
           style={{ animationDelay: '0.25s' }}
@@ -288,16 +272,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          PAYMENTS SECTION
-      ══════════════════════════════════════════ */}
+      {/*PAYMENTS SECTION*/}
       <section
         id="payments"
         className="scroll-mt-28 w-full max-w-6xl px-5 lg:px-10 py-16"
       >
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center">
 
-          {/* Image */}
           <div
             className="flex justify-center w-full order-2 lg:order-1 animate-fade-up"
             style={{ animationDelay: '0.2s' }}
@@ -313,7 +294,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Text */}
           <div className="flex flex-col w-full order-1 lg:order-2 animate-fade-up">
             <span className="label-tag mb-4">PAYMENTS</span>
 
@@ -354,9 +334,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          REVIEWS SECTION
-      ══════════════════════════════════════════ */}
+      {/*REVIEWS SECTION*/}
       <section
         id="reviews"
         className="scroll-mt-28 w-full max-w-6xl px-5 lg:px-10 py-16"
@@ -379,9 +357,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          CTA SECTION
-      ══════════════════════════════════════════ */}
+          {/* CTA */ }
       <section className="w-full max-w-6xl px-5 lg:px-10 py-20 flex flex-col items-center text-center animate-fade-up">
 
         <span className="label-tag mb-4">GET STARTED TODAY</span>
