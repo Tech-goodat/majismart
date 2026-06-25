@@ -76,8 +76,11 @@ const Home = () => {
               Get the App
             </Link>
 
-            <Link href="/auth/login" className="btn-secondary w-[40%] lg:w-30 text-lg py-2">
+            <Link href="/auth/login" className="btn-secondary w-[40%] lg:w-40 text-lg py-2">
               Sign In
+            </Link>
+            <Link href="/auth/signup" className="btn-secondary w-[40%] lg:w-40 text-lg py-2">
+              Sign Up
             </Link>
           </div>
 

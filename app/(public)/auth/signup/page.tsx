@@ -9,7 +9,7 @@ import { HiHome } from "react-icons/hi";
 import { FaUnlockAlt, FaEyeSlash, FaRegEye } from "react-icons/fa";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 
-const LogIn = () => {
+const SignUp = () => {
   const router = useRouter()
 
   const [showPassword, setShowPassword] = React.useState(false)
@@ -17,7 +17,9 @@ const LogIn = () => {
 
   const [loginData, setLoginData] = React.useState({
     email: '',
-    password: ''
+    password: '',
+    first_name:'',
+    last_name:''
   })
 
   const togglePasswordVisibility = () => {
@@ -44,7 +46,7 @@ const LogIn = () => {
     try {
       setIsLoading(true)
 
-      const response = await fetch('http://127.0.0.1:8000/login/', {
+      const response = await fetch('http://127.0.0.1:8000/register/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -60,7 +62,7 @@ const LogIn = () => {
 
       console.log(data)
 
-      localStorage.setItem('token', data.token)
+      sessionStorage.setItem('token', data.access_token)
 
       setTimeout(() => {
         setIsLoading(false)
@@ -76,7 +78,7 @@ const LogIn = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-[#050A0F] text-white">
       <div className='flex  w-full items-center justify-start px-5 lg:hidden'>
-        <Link href="/" className="flex bg-linear-to-r from-[#00C8F0] to-[#00E0BB] bg-clip-text p-4 gap-3 items-center text-gray-400 hover:text-white transition">
+        <Link href="/" className="flex bg-gradient-to-r from-[#00C8F0] to-[#00E0BB] bg-clip-text p-4 gap-3 items-center text-gray-400 hover:text-white transition">
           <HiHome size={25} />
            <span
             className="text-2xl flex items-center font-bold  text-transparent"
@@ -121,6 +123,58 @@ const LogIn = () => {
             onSubmit={handleLogin}
             className="w-full max-w-md mt-8 space-y-5"
           >
+
+            <div className="space-y-3">
+              <label className="text-sm  text-gray-300">
+                First Name
+              </label>
+
+              <div
+                className="flex items-center gap-3 px-4 py-3 rounded-xl
+                           bg-white/5 border border-white/10
+                           transition-all duration-200
+                           hover:border-white/20
+                           focus-within:border-cyan-400/70
+                           focus-within:ring-2 focus-within:ring-cyan-400/20"
+              >
+                <MdOutlineMarkEmailUnread className="text-gray-400 text-lg" />
+
+                <input
+                  type="text"
+                  name="first_name"
+                  value={loginData.first_name}
+                  onChange={handleChange}
+                  placeholder="your first name"
+                  className="w-full bg-transparent outline-none text-white placeholder-gray-500"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-sm  text-gray-300">
+                Last Name
+              </label>
+
+              <div
+                className="flex items-center gap-3 px-4 py-3 rounded-xl
+                           bg-white/5 border border-white/10
+                           transition-all duration-200
+                           hover:border-white/20
+                           focus-within:border-cyan-400/70
+                           focus-within:ring-2 focus-within:ring-cyan-400/20"
+              >
+                <MdOutlineMarkEmailUnread className="text-gray-400 text-lg" />
+
+                <input
+                  type="text"
+                  name="last_name"
+                  value={loginData.last_name}
+                  onChange={handleChange}
+                  placeholder="your last name"
+                  className="w-full bg-transparent outline-none text-white placeholder-gray-500"
+                />
+              </div>
+            </div>
 
             <div className="space-y-3">
               <label className="text-sm  text-gray-300">
@@ -190,7 +244,7 @@ const LogIn = () => {
               type="submit"
               disabled={isLoading}
               className="w-full py-3.5 mb-4 cursor-pointer rounded-xl font-medium text-gray-800
-                         bg-linear-to-r from-cyan-400 to-emerald-400
+                         bg-gradient-to-r from-cyan-400 to-emerald-400
                          transition-all duration-200
                          hover:opacity-90 active:scale-[0.99]
                          focus:outline-none focus:ring-2 focus:ring-cyan-400/40
@@ -199,7 +253,7 @@ const LogIn = () => {
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-gray-800">
-                    Signing in
+                    Creating Account
                   </span>
 
                   <span className="flex gap-1 items-end">
@@ -209,7 +263,7 @@ const LogIn = () => {
                   </span>
                 </div>
               ) : (
-                "Sign In"
+                "Submit"
               )}
             </button>
 
@@ -220,4 +274,4 @@ const LogIn = () => {
   )
 }
 
-export default LogIn
+export default SignUp
