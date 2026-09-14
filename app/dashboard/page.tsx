@@ -8,14 +8,13 @@ import {
   Droplets,
   Wifi,
   WifiOff,
-  ArrowUpRight,
-  ArrowDownRight,
   AlertTriangle,
   CreditCard,
   Activity,
 } from "lucide-react";
 
 const API_URL = "http://127.0.0.1:8000";
+const WS_URL = "ws://127.0.0.1:8000";
 
 type User = {
   username: string;
@@ -109,6 +108,46 @@ const Dashboard = () => {
 
     fetchDashboard();
   }, []);
+
+  // WebSocket connection
+  useEffect(() => {
+    if (!meter?.id) {
+      return;
+    }
+
+    const socket = new WebSocket(
+      `${WS_URL}/ws/telemetry/${meter.id}/`
+    );
+
+    socket.onopen = () => {
+      console.log("Majismart WebSocket connected");
+    };
+
+    socket.onmessage = (event) => {
+      const data: Telemetry = JSON.parse(event.data);
+
+      console.log("Live telemetry:", data);
+
+      setLatest(data);
+
+      setTelemetry((previous) => [
+        data,
+        ...previous,
+      ].slice(0, 50));
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    socket.onclose = () => {
+      console.log("Majismart WebSocket disconnected");
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [meter?.id]);
 
   const handleLogout = async () => {
     const token =
@@ -240,14 +279,12 @@ const Dashboard = () => {
           </div>
         </header>
 
-
         {/* ERROR */}
         {error && (
           <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
             {error}
           </div>
         )}
-
 
         {/* BALANCE HERO */}
         <section className="rounded-3xl bg-blue-600 p-6 text-white shadow-sm sm:p-8">
@@ -266,7 +303,8 @@ const Dashboard = () => {
               ) : (
                 <>
                   <p className="mt-3 text-4xl font-bold tracking-tight">
-                    KES {balance.toLocaleString("en-KE", {
+                    KES{" "}
+                    {balance.toLocaleString("en-KE", {
                       minimumFractionDigits: 2,
                     })}
                   </p>
@@ -283,7 +321,6 @@ const Dashboard = () => {
             </button>
           </div>
         </section>
-
 
         {/* LIVE STATS */}
         <section className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -322,7 +359,6 @@ const Dashboard = () => {
             )}
           </div>
 
-
           {/* CURRENT FLOW */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -356,7 +392,6 @@ const Dashboard = () => {
               </>
             )}
           </div>
-
 
           {/* METER */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -406,9 +441,7 @@ const Dashboard = () => {
               </>
             )}
           </div>
-
         </section>
-
 
         {/* USAGE HISTORY */}
         <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -426,7 +459,6 @@ const Dashboard = () => {
 
             <Droplets className="h-5 w-5 text-blue-600" />
           </div>
-
 
           {recentTelemetry.length === 0 ? (
             <div className="mt-8 rounded-xl bg-slate-50 px-4 py-8 text-center">
@@ -476,9 +508,7 @@ const Dashboard = () => {
               ))}
             </div>
           )}
-
         </section>
-
 
         {/* STATUS / ALERT */}
         <section className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -526,7 +556,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-
           {/* SIMPLE ALERT */}
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex gap-3">
@@ -546,9 +575,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
         </section>
-
 
         {/* FOOTER */}
         <footer className="mt-8 flex flex-col gap-2 border-t border-slate-200 pt-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
