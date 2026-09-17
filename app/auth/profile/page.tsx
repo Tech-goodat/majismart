@@ -15,7 +15,7 @@ import {
   EyeOff,
 } from "lucide-react";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://maji-iot-backend.onrender.com";
 
 type UserData = {
   id: number;
