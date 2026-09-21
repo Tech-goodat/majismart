@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 const blue = "oklch(62.3% 0.214 259.815)";
 
-const API_URL = "https://maji-iot-backend.onrender.com";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SignupPage() {
   const router = useRouter();
