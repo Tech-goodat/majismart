@@ -20,28 +20,36 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     setError("");
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/users/login/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      const response = await fetch(
+        `${API_URL}/users/login/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        if (typeof data === "object" && data !== null) {
+        if (
+          typeof data === "object" &&
+          data !== null
+        ) {
           const firstError = Object.values(data)[0];
 
           if (Array.isArray(firstError)) {
@@ -56,41 +64,86 @@ export default function LoginPage() {
         return;
       }
 
-      /*
-       * Knox returns:
-       *
-       * {
-       *   token: "...",
-       *   user: {
-       *     id: 1,
-       *     email: "...",
-       *     username: "..."
-       *   }
-       * }
-       */
-
       const { token, user } = data;
 
       if (!token) {
-        setError("Login succeeded, but no authentication token was returned.");
+        setError(
+          "Login succeeded, but no authentication token was returned."
+        );
+
         return;
       }
 
-      if (rememberMe) {
-        localStorage.setItem("auth_token", token);
-        localStorage.setItem("auth_user", JSON.stringify(user));
-      } else {
-        sessionStorage.setItem("auth_token", token);
-        sessionStorage.setItem("auth_user", JSON.stringify(user));
+      if (!user) {
+        setError(
+          "Login succeeded, but no user information was returned."
+        );
+
+        return;
       }
 
-      router.push("/dashboard");
+      /*
+       * Store authentication information.
+       *
+       * Remember me:
+       *     localStorage
+       *
+       * Otherwise:
+       *     sessionStorage
+       */
+      if (rememberMe) {
+        localStorage.setItem(
+          "auth_token",
+          token
+        );
+
+        localStorage.setItem(
+          "auth_user",
+          JSON.stringify(user)
+        );
+      } else {
+        sessionStorage.setItem(
+          "auth_token",
+          token
+        );
+
+        sessionStorage.setItem(
+          "auth_user",
+          JSON.stringify(user)
+        );
+      }
+
+      /*
+       * Role-based redirect
+       *
+       * Management:
+       *     is_staff === true
+       *     OR
+       *     is_superuser === true
+       *
+       * Tenant:
+       *     everyone else
+       */
+      const isManagement =
+        user.is_staff === true ||
+        user.is_superuser === true;
+
+      if (isManagement) {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
+
     } catch (error) {
-      console.error("Login error:", error);
+      console.error(
+        "Login error:",
+        error
+      );
 
       setError(
         "Unable to connect to the server. Make sure the Django backend is running."
       );
+
     } finally {
       setIsLoading(false);
     }
@@ -99,12 +152,20 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-white">
       <div className="grid min-h-screen lg:grid-cols-2">
+
         {/* Left side */}
+
         <div className="hidden bg-slate-50 lg:flex lg:flex-col lg:justify-between lg:p-12">
-          <Link href="/" className="flex items-center gap-3">
+
+          <Link
+            href="/"
+            className="flex items-center gap-3"
+          >
             <div
               className="flex h-9 w-9 items-center justify-center rounded-xl text-white"
-              style={{ backgroundColor: blue }}
+              style={{
+                backgroundColor: blue,
+              }}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -123,9 +184,12 @@ export default function LoginPage() {
           </Link>
 
           <div className="max-w-md">
+
             <p
               className="text-sm font-semibold uppercase tracking-[0.16em]"
-              style={{ color: blue }}
+              style={{
+                color: blue,
+              }}
             >
               Welcome back
             </p>
@@ -133,31 +197,42 @@ export default function LoginPage() {
             <h1 className="mt-5 text-5xl font-semibold leading-tight tracking-[-0.04em]">
               Your water.
               <br />
-              <span style={{ color: blue }}>Your view.</span>
+              <span style={{ color: blue }}>
+                Your view.
+              </span>
             </h1>
 
             <p className="mt-6 text-lg leading-8 text-slate-600">
-              Sign in to see your household's water usage, balance, and the
-              activity happening around your meter.
+              Sign in to see your household's water
+              usage, balance, and the activity happening
+              around your meter.
             </p>
+
           </div>
 
           <p className="text-sm text-slate-400">
             © {new Date().getFullYear()} Majismart
           </p>
+
         </div>
 
         {/* Form */}
+
         <div className="flex min-h-screen items-center justify-center px-6 py-12">
+
           <div className="w-full max-w-md">
+
             {/* Mobile logo */}
+
             <Link
               href="/"
               className="mb-10 flex items-center gap-3 lg:hidden"
             >
               <div
                 className="flex h-9 w-9 items-center justify-center rounded-xl text-white"
-                style={{ backgroundColor: blue }}
+                style={{
+                  backgroundColor: blue,
+                }}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -170,10 +245,13 @@ export default function LoginPage() {
                 </svg>
               </div>
 
-              <span className="text-xl font-semibold">Majismart</span>
+              <span className="text-xl font-semibold">
+                Majismart
+              </span>
             </Link>
 
             <div>
+
               <h2 className="text-3xl font-semibold tracking-tight">
                 Welcome back
               </h2>
@@ -181,11 +259,18 @@ export default function LoginPage() {
               <p className="mt-2 text-slate-500">
                 Sign in to continue to your dashboard.
               </p>
+
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            <form
+              onSubmit={handleSubmit}
+              className="mt-8 space-y-5"
+            >
+
               {/* Email */}
+
               <div>
+
                 <label
                   htmlFor="email"
                   className="mb-2 block text-sm font-medium text-slate-700"
@@ -199,16 +284,22 @@ export default function LoginPage() {
                   type="email"
                   autoComplete="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) =>
+                    setEmail(e.target.value)
+                  }
                   placeholder="you@example.com"
                   required
                   className="h-12 w-full rounded-lg border border-slate-200 px-4 text-sm outline-none transition placeholder:text-slate-400 focus:border-[oklch(62.3%_0.214_259.815)] focus:ring-4 focus:ring-[oklch(62.3%_0.214_259.815_/_0.08)]"
                 />
+
               </div>
 
               {/* Password */}
+
               <div>
+
                 <div className="mb-2 flex items-center justify-between">
+
                   <label
                     htmlFor="password"
                     className="block text-sm font-medium text-slate-700"
@@ -219,20 +310,30 @@ export default function LoginPage() {
                   <Link
                     href="/auth/forgot-password"
                     className="text-xs font-medium transition hover:opacity-75"
-                    style={{ color: blue }}
+                    style={{
+                      color: blue,
+                    }}
                   >
                     Forgot password?
                   </Link>
+
                 </div>
 
                 <div className="relative">
+
                   <input
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type={
+                      showPassword
+                        ? "text"
+                        : "password"
+                    }
                     autoComplete="current-password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) =>
+                      setPassword(e.target.value)
+                    }
                     placeholder="Enter your password"
                     required
                     className="h-12 w-full rounded-lg border border-slate-200 px-4 pr-12 text-sm outline-none transition placeholder:text-slate-400 focus:border-[oklch(62.3%_0.214_259.815)] focus:ring-4 focus:ring-[oklch(62.3%_0.214_259.815_/_0.08)]"
@@ -240,9 +341,13 @@ export default function LoginPage() {
 
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() =>
+                      setShowPassword(!showPassword)
+                    }
                     aria-label={
-                      showPassword ? "Hide password" : "Show password"
+                      showPassword
+                        ? "Hide password"
+                        : "Show password"
                     }
                     className="absolute right-0 top-0 flex h-12 w-12 items-center justify-center text-slate-400 transition hover:text-slate-700"
                   >
@@ -268,23 +373,37 @@ export default function LoginPage() {
                         strokeWidth="1.8"
                       >
                         <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
-                        <circle cx="12" cy="12" r="2.5" />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="2.5"
+                        />
                       </svg>
                     )}
                   </button>
+
                 </div>
+
               </div>
 
               {/* Remember me */}
+
               <div className="flex items-center gap-3">
+
                 <input
                   id="remember"
                   name="remember"
                   type="checkbox"
                   checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
+                  onChange={(e) =>
+                    setRememberMe(
+                      e.target.checked
+                    )
+                  }
                   className="h-4 w-4 rounded border-slate-300"
-                  style={{ accentColor: blue }}
+                  style={{
+                    accentColor: blue,
+                  }}
                 />
 
                 <label
@@ -293,9 +412,11 @@ export default function LoginPage() {
                 >
                   Remember me
                 </label>
+
               </div>
 
               {/* API error */}
+
               {error && (
                 <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
                   {error}
@@ -303,34 +424,49 @@ export default function LoginPage() {
               )}
 
               {/* Submit */}
+
               <button
                 type="submit"
                 disabled={isLoading}
                 className="h-12 w-full rounded-lg text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                style={{ backgroundColor: blue }}
+                style={{
+                  backgroundColor: blue,
+                }}
               >
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading
+                  ? "Signing in..."
+                  : "Sign in"}
               </button>
+
             </form>
 
             <div className="my-7 flex items-center gap-4">
               <div className="h-px flex-1 bg-slate-100" />
-              <span className="text-xs text-slate-400">OR</span>
+              <span className="text-xs text-slate-400">
+                OR
+              </span>
               <div className="h-px flex-1 bg-slate-100" />
             </div>
 
             <p className="text-center text-sm text-slate-500">
               Don't have an account?{" "}
+
               <Link
                 href="/auth/signup"
                 className="font-medium"
-                style={{ color: blue }}
+                style={{
+                  color: blue,
+                }}
               >
                 Create one
               </Link>
+
             </p>
+
           </div>
+
         </div>
+
       </div>
     </main>
   );
