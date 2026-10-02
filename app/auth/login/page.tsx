@@ -6,7 +6,18 @@ import { useRouter } from "next/navigation";
 
 const blue = "oklch(62.3% 0.214 259.815)";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+/*
+ * Django API base URL.
+ *
+ * .env.local:
+ * NEXT_PUBLIC_API_URL=http://localhost:8000
+ *
+ * Production:
+ * NEXT_PUBLIC_API_URL=https://maji-iot-backend.onrender.com
+ *
+ * All Django REST endpoints live under /api.
+ */
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -50,7 +61,8 @@ export default function LoginPage() {
           typeof data === "object" &&
           data !== null
         ) {
-          const firstError = Object.values(data)[0];
+          const firstError =
+            Object.values(data)[0];
 
           if (Array.isArray(firstError)) {
             setError(String(firstError[0]));
@@ -58,7 +70,9 @@ export default function LoginPage() {
             setError(String(firstError));
           }
         } else {
-          setError("Invalid email or password.");
+          setError(
+            "Invalid email or password."
+          );
         }
 
         return;

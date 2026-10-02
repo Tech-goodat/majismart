@@ -18,6 +18,7 @@ import {
   Loader2,
   Unlock,
   Lock,
+  Power,
 } from "lucide-react"
 
 const API_URL =
@@ -36,6 +37,7 @@ type Meter = {
   user: number | null
   meter_number: string
   status: string
+  is_active: boolean
   balance: string
   valve_open: boolean
   closure_source: ClosureSource
@@ -53,6 +55,9 @@ export default function AdminPage() {
     useState("")
 
   const [controllingMeter, setControllingMeter] =
+    useState<number | null>(null)
+
+  const [activatingMeter, setActivatingMeter] =
     useState<number | null>(null)
 
   const [openMenu, setOpenMenu] =
@@ -151,6 +156,120 @@ export default function AdminPage() {
     } finally {
 
       setLoading(false)
+
+    }
+
+  }
+
+  /*
+   * ------------------------------------------------
+   * METER ACTIVATION
+   * ------------------------------------------------
+   */
+
+  const toggleMeterActivation = async (
+    meterId: number,
+    isActive: boolean
+  ) => {
+
+    try {
+
+      setActivatingMeter(
+        meterId
+      )
+
+      setError("")
+      setOpenMenu(null)
+
+      const token =
+        getToken()
+
+      if (!token) {
+
+        setError(
+          "You are not authenticated."
+        )
+
+        return
+
+      }
+
+      const action =
+        isActive
+          ? "deactivate"
+          : "activate"
+
+      const response =
+        await fetch(
+          `${API_URL}/meters/${meterId}/${action}/`,
+          {
+            method: "POST",
+
+            headers: {
+              Authorization:
+                `Token ${token}`,
+
+              "Content-Type":
+                "application/json",
+            },
+          }
+        )
+
+      const data =
+        await response.json()
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.detail ||
+          data.error ||
+          `Failed to ${
+            isActive
+              ? "deactivate"
+              : "activate"
+          } meter.`
+        )
+
+      }
+
+      /*
+       * Update the UI immediately using
+       * Django's response.
+       */
+
+      setMeters(
+        (currentMeters) =>
+          currentMeters.map(
+            (meter) =>
+              meter.id === meterId
+                ? {
+                    ...meter,
+
+                    is_active:
+                      data.is_active,
+                  }
+                : meter
+          )
+      )
+
+    } catch (error) {
+
+      console.error(
+        "Meter activation control failed:",
+        error
+      )
+
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to update meter."
+      )
+
+    } finally {
+
+      setActivatingMeter(
+        null
+      )
 
     }
 
@@ -290,20 +409,12 @@ export default function AdminPage() {
    * ------------------------------------------------
    *
    * The admin needs a WebSocket connection for
-   * every meter so that changes made by tenants
-   * are reflected immediately.
+   * every meter so that valve changes made by
+   * tenants are reflected immediately.
    *
-   * Example:
-   *
-   * Tenant closes MTR-00001
-   *          ↓
-   * Django
-   *          ↓
-   * meter_1 channel group
-   *          ↓
-   * Admin WebSocket
-   *          ↓
-   * Admin UI shows CLOSED
+   * Activation/deactivation is intentionally
+   * handled through the REST API because it is
+   * management configuration rather than telemetry.
    *
    */
 
@@ -401,10 +512,6 @@ export default function AdminPage() {
              *
              * The admin currently does not need
              * to display live telemetry here.
-             *
-             * We still receive the event because
-             * this WebSocket endpoint is shared
-             * with the tenant dashboard.
              */
 
             if (
@@ -478,6 +585,18 @@ export default function AdminPage() {
 
   const totalMeters =
     meters.length
+
+  const activeMeters =
+    meters.filter(
+      (meter) =>
+        meter.is_active
+    ).length
+
+  const inactiveMeters =
+    meters.filter(
+      (meter) =>
+        !meter.is_active
+    ).length
 
   const onlineMeters =
     meters.filter(
@@ -585,7 +704,7 @@ export default function AdminPage() {
         {!loading &&
           meters.length > 0 && (
 
-            <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
 
               {/* Total */}
 
@@ -608,6 +727,62 @@ export default function AdminPage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
 
                     <Gauge className="h-5 w-5 text-blue-600" />
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Active */}
+
+              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                      Active
+                    </p>
+
+                    <p className="mt-1 text-2xl font-semibold text-slate-900">
+                      {activeMeters}
+                    </p>
+
+                  </div>
+
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
+
+                    <Power className="h-5 w-5 text-green-600" />
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Inactive */}
+
+              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                      Inactive
+                    </p>
+
+                    <p className="mt-1 text-2xl font-semibold text-slate-900">
+                      {inactiveMeters}
+                    </p>
+
+                  </div>
+
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
+
+                    <Power className="h-5 w-5 text-slate-500" />
 
                   </div>
 
@@ -643,7 +818,7 @@ export default function AdminPage() {
 
               </div>
 
-              {/* Open */}
+              {/* Valves */}
 
               <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
 
@@ -671,34 +846,6 @@ export default function AdminPage() {
 
               </div>
 
-              {/* Closed */}
-
-              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-
-                    <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                      Valves closed
-                    </p>
-
-                    <p className="mt-1 text-2xl font-semibold text-slate-900">
-                      {closedValves}
-                    </p>
-
-                  </div>
-
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50">
-
-                    <Lock className="h-5 w-5 text-red-600" />
-
-                  </div>
-
-                </div>
-
-              </div>
-
             </div>
 
           )}
@@ -718,7 +865,7 @@ export default function AdminPage() {
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  Control valve access and monitor meter status.
+                  Manage connections, valve access, and meter status.
                 </p>
 
               </div>
@@ -742,7 +889,7 @@ export default function AdminPage() {
 
           <div className="overflow-x-auto">
 
-            <table className="w-full min-w-[900px] text-left">
+            <table className="w-full min-w-[1000px] text-left">
 
               <thead className="border-b border-slate-200 bg-slate-50">
 
@@ -754,6 +901,10 @@ export default function AdminPage() {
 
                   <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Tenant
+                  </th>
+
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Connection
                   </th>
 
                   <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -787,7 +938,7 @@ export default function AdminPage() {
                   <tr>
 
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="px-6 py-16 text-center"
                     >
 
@@ -810,7 +961,7 @@ export default function AdminPage() {
                   <tr>
 
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="px-6 py-16 text-center"
                     >
 
@@ -831,6 +982,10 @@ export default function AdminPage() {
 
                       const isControlling =
                         controllingMeter ===
+                        meter.id
+
+                      const isActivating =
+                        activatingMeter ===
                         meter.id
 
                       const menuOpen =
@@ -899,6 +1054,28 @@ export default function AdminPage() {
                               </span>
 
                             )}
+
+                          </td>
+
+                          {/* Connection */}
+
+                          <td className="px-6 py-4">
+
+                            <span
+                              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
+                                meter.is_active
+                                  ? "bg-blue-50 text-blue-700"
+                                  : "bg-slate-100 text-slate-600"
+                              }`}
+                            >
+
+                              <Power className="h-3.5 w-3.5" />
+
+                              {meter.is_active
+                                ? "Active"
+                                : "Inactive"}
+
+                            </span>
 
                           </td>
 
@@ -1035,7 +1212,75 @@ export default function AdminPage() {
 
                             {menuOpen && (
 
-                              <div className="absolute right-6 z-20 mt-2 w-56 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg">
+                              <div className="absolute right-6 z-20 mt-2 w-60 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg">
+
+                                {/* Connection control */}
+
+                                {meter.is_active ? (
+
+                                  <button
+                                    onClick={() =>
+                                      toggleMeterActivation(
+                                        meter.id,
+                                        true
+                                      )
+                                    }
+                                    disabled={
+                                      isActivating
+                                    }
+                                    className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                  >
+
+                                    {isActivating ? (
+
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+
+                                    ) : (
+
+                                      <Power className="h-4 w-4" />
+
+                                    )}
+
+                                    {isActivating
+                                      ? "Deactivating..."
+                                      : "Deactivate meter"}
+
+                                  </button>
+
+                                ) : (
+
+                                  <button
+                                    onClick={() =>
+                                      toggleMeterActivation(
+                                        meter.id,
+                                        false
+                                      )
+                                    }
+                                    disabled={
+                                      isActivating
+                                    }
+                                    className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-blue-600 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                  >
+
+                                    {isActivating ? (
+
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+
+                                    ) : (
+
+                                      <Power className="h-4 w-4" />
+
+                                    )}
+
+                                    {isActivating
+                                      ? "Activating..."
+                                      : "Activate meter"}
+
+                                  </button>
+
+                                )}
+
+                                {/* Valve control */}
 
                                 {meter.valve_open ? (
 
@@ -1049,7 +1294,7 @@ export default function AdminPage() {
                                     disabled={
                                       isControlling
                                     }
-                                    className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                                    className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                                   >
 
                                     {isControlling ? (
@@ -1100,6 +1345,8 @@ export default function AdminPage() {
                                   </button>
 
                                 )}
+
+                                {/* Close menu */}
 
                                 <button
                                   onClick={() =>
